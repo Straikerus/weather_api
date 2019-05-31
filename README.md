@@ -7,20 +7,24 @@
 с названиями городов. В случае успеха вернётся ответ с кодом 200 и пустым телом. Если возникнет какая-либо ошибка при обновлении данных о каком-либо городе, вернётся ответ с кодом 500, содержащий json с описанием всех произошедших ошибок.\
 На этом моменте хочу обратить внимание. Я решил, что будет логично, что, в случае ошибки с каким-либо городом, скрипт не должен прерывать свою работу и возвращать ответ, а должен записать ошибку и продолжить свою работу и обновить данные об остальных указанных городах, после чего отправить все произошедшие ошибки в ответе.\
 **Пример тела запроса**:\
-{\
-    "cities_list":"['novokuznetsk', 'tomsk', 'ekaterinburg']"\
-}\
+```javascript
+{
+    "cities_list":"['novokuznetsk', 'tomsk', 'ekaterinburg']"
+}
+```
 
 **Пример ответа, в случае ошибок**:\
-{\
-    "novokuznetsk": {\
-        "yandex": "Cannot find weather for this city",\
-        "openweathermap": "API limit of calls exceeded"\
-    },\
-    "ekaterinburg":{\
-        "openweathermap": "API limit of calls exceeded"\
-    }\
+```javascript
+{
+    "novokuznetsk": {
+        "yandex": "Cannot find weather for this city",
+        "openweathermap": "API limit of calls exceeded"
+    },
+    "ekaterinburg":{
+        "openweathermap": "API limit of calls exceeded"
+    }
 }
+```
 
 ## Получение данных о погоде в указанном городе
 Для получения данных о погоде в указанном городе, необходимо отправить GET запрос по адресу /api/get-weather.\
@@ -30,10 +34,12 @@
 В случае если данных о городе нет только в некоторых источниках, вернётся ответ с кодом 200, содержащий json, в котором, для некоторых источников, будет указана причина ошибки.
 
 **Пример ответа**:\
-{\
-    "yandex": {"temperature": 16.0, "timestamp": 1559324186.442324},\
-    "openweathermap": "Cannot find weather from this source"\
+```javascript
+{
+    "yandex": {"temperature": 16.0, "timestamp": 1559324186.442324},
+    "openweathermap": "Cannot find weather from this source"
 }
+```
 
 ## Добавление новых источников данных
 Для добавления нового источника данных, необходимо описать класс клиента для взаимодействия с источником данных.\
