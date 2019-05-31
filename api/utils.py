@@ -18,26 +18,33 @@ def update_cities(cities_list):
     }
 
     """
+    # В данном списке хранятся обработанние города, для исключения обработки одного и
+    # того же города несколько раз
+    handled_cities = []
+
     error_logs = {}
     for city in cities_list:
         if not isinstance(city, str) or len(city) == 0:
             city = str(city)
             error_logs[city] = 'Wrong city format'
             continue
-        city_errors = {}
-        for source_name, source_client_object in settings.SOURCES_DICT.items():
-            result = source_client_object.get_city_weather(city)
-            if 'error' in result:
-                city_errors[source_name] = result['error']
-                continue
-            Weather.objects.create(
-                city=city.lower(),
-                temperature=result['temperature'],
-                source=source_name,
-                date=datetime.datetime.now()
-            )
-        if len(city_errors) > 0:
-            error_logs[city] = city_errors
+        lower_city = city.lower()
+        if lower_city not in handled_cities:
+            handled_cities.append(lower_city)
+            city_errors = {}
+            for source_name, source_client_object in settings.SOURCES_DICT.items():
+                result = source_client_object.get_city_weather(city)
+                if 'error' in result:
+                    city_errors[source_name] = result['error']
+                    continue
+                Weather.objects.create(
+                    city=lower_city,
+                    temperature=result['temperature'],
+                    source=source_name,
+                    date=datetime.datetime.now()
+                )
+            if len(city_errors) > 0:
+                error_logs[city] = city_errors
     return error_logs
 
 def get_city_weather(city):
