@@ -20,7 +20,7 @@ def update_cities(cities_list):
     """
     error_logs = {}
     for city in cities_list:
-        if not isinstance(city, str):
+        if not isinstance(city, str) or len(city) == 0:
             city = str(city)
             error_logs[city] = 'Wrong city format'
             continue
