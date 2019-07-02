@@ -1,6 +1,6 @@
 import datetime
 from django.conf import settings
-from .models import Weather
+from .models import Weather, City
 
 def update_cities(cities_list):
     """
@@ -37,14 +37,15 @@ def update_cities(cities_list):
                 if 'error' in result:
                     city_errors[source_name] = result['error']
                     continue
+                city, created = City.objects.get_or_create(name=lower_city)
                 Weather.objects.create(
-                    city=lower_city,
+                    city=city,
                     temperature=result['temperature'],
                     source=source_name,
                     date=datetime.datetime.now()
                 )
             if len(city_errors) > 0:
-                error_logs[city] = city_errors
+                error_logs[city.name] = city_errors
     return error_logs
 
 def get_city_weather(city):
@@ -68,7 +69,7 @@ def get_city_weather(city):
     for source_name in settings.SOURCES_DICT.keys():
         try:
             weather = Weather.objects.filter(
-                city=city.lower(),
+                city__name=city.lower(),
                 source=source_name
             ).latest(
                 'date'
