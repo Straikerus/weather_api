@@ -1,0 +1,20 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        <h1>Weather:</h1>
+        {% for city, weather_list in city_weather.items %}
+        <div>
+            <h4>{{ city }}</h4>
+            <div>
+                {% for weather in weather_list %}
+                <div>
+                    <span>{{ weather.source }} {{ weather.temperature }} {{ weather.datetime }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </body>
+</html>
