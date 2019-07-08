@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 
 
@@ -19,10 +20,14 @@ class Weather(models.Model):
     # будет возвращать градусы в виде целого числа
     temperature = models.FloatField('Температура')
     source = models.CharField('Источник', max_length=100)
-    date = models.DateTimeField('Дата и время')
+    datetime = models.DateTimeField('Дата и время', auto_now_add=True)
 
     def __str__(self):
-        return '{} - {} - {}'.format(self.city, self.date, self.source)
+        return '{} - {} - {}'.format(
+            self.city,
+            timezone.localtime(self.datetime),
+            self.source
+        )
     
     class Meta:
         verbose_name = 'Погода'
@@ -34,11 +39,14 @@ class ScheduledUpdate(models.Model):
         (0, 'Успешно'),
         (1, 'Имеются ошибки при обновлении')
     ]
-    datetime = models.DateTimeField('Дата обновления')
+    datetime = models.DateTimeField(
+        'Дата обновления',
+        auto_now_add=True
+    )
     status = models.SmallIntegerField('Статус обновления', choices=STATUS_CHOICES)
 
     def __str__(self):
-        return '{} {}'.format(self.datetime, self.get_status_display())
+        return '{} {}'.format(timezone.localtime(self.datetime), self.get_status_display())
     
     class Meta:
         verbose_name = 'Плановое обновление'

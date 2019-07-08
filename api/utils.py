@@ -41,8 +41,7 @@ def update_cities(cities_list):
                 Weather.objects.create(
                     city=city,
                     temperature=result['temperature'],
-                    source=source_name,
-                    date=datetime.datetime.now()
+                    source=source_name
                 )
             if len(city_errors) > 0:
                 error_logs[city.name] = city_errors
@@ -72,7 +71,7 @@ def get_city_weather(city):
                 city__name=city.lower(),
                 source=source_name
             ).latest(
-                'date'
+                'datetime'
             )
             result[source_name] = {
                 'temperature': weather.temperature,

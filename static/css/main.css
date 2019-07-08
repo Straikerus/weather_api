@@ -1,0 +1,32 @@
+#weather-list .weather-wrapper {
+    min-height: 250px;
+    margin-bottom: 20px;
+    padding-top: 15px;
+    border-radius: 10px;
+    color: white;
+}
+
+#weather-list .weather-wrapper .city-name {
+    font-weight: bold;
+    text-align: center;
+}
+
+#weather-list .weather-wrapper .source-wrapper {
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+#weather-list .source-info .source-name {
+    text-align: center;
+}
+
+#weather-list .source-info .temperature {
+    font-size: 30px;
+}
+
+#weather-list .source-info .datetime {
+    margin-left: 35px;;
+}

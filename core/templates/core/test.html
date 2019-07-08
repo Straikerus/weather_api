@@ -1,20 +1,30 @@
-<html>
-    <head>
-
-    </head>
-    <body>
-        <h1>Weather:</h1>
-        {% for city, weather_list in city_weather.items %}
-        <div>
-            <h4>{{ city }}</h4>
-            <div>
-                {% for weather in weather_list %}
-                <div>
-                    <span>{{ weather.source }} {{ weather.temperature }} {{ weather.datetime }}</span>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <div id="weather-list">
+        <div class="row">
+            <div class="col-10 offset-1">
+                <div class="row">
+                    {% for city, weather_list in city_weather_dict.items %}
+                    <div class="col-3">
+                        <div class="weather-wrapper" style="background: url('{% static 'img/weather-background2.jpg' %}')">
+                            <h3 class="city-name">{{ city }}</h3>
+                            {% for weather in weather_list %}
+                            <div class="source-wrapper">
+                                <div class="source-info">
+                                    <h4 class="source-name">{{ weather.source }}</h4>
+                                    <span class="temperature">{{ weather.temperature }}℃</span>
+                                    <span class="datetime">{{ weather.datetime }}</span>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
         </div>
-        {% endfor %}
-    </body>
-</html>
+    </div>
+</div>
+{% endblock %}

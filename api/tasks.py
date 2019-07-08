@@ -11,7 +11,7 @@ from .utils import update_cities
 def update_weather_info():
     cities_list = City.objects.values_list('name', flat=True)
     error_logs = update_cities(cities_list)
-    scheduled_update_object = ScheduledUpdate(datetime=datetime.datetime.now(), status=0)
+    scheduled_update_object = ScheduledUpdate(status=0)
     if len(error_logs) > 0:
         scheduled_update_object.status = 1
         scheduled_update_object.save()
