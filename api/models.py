@@ -1,6 +1,8 @@
 from django.utils import timezone
 from django.db import models
 
+from core.db.manager import CustomManager
+
 
 class City(models.Model):
     name = models.CharField('Название', max_length=200)
@@ -14,6 +16,7 @@ class City(models.Model):
 
 
 class Weather(models.Model):
+    objects = CustomManager()
     city = models.ForeignKey(City, verbose_name='Город', on_delete=models.CASCADE)
 
     # Для температуры использовал FloatField т.к. не уверен, что каждый источник
