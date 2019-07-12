@@ -1,4 +1,6 @@
 from django.db.models.sql.compiler import SQLCompiler
+from django.db.models.sql.constants import MULTI, GET_ITERATOR_CHUNK_SIZE
+from django.db import Error
 
 
 class CustomSQLCompiler(SQLCompiler):
@@ -112,6 +114,32 @@ class CustomSQLCompiler(SQLCompiler):
                 if having:
                     result.append('HAVING %s' % having)
                     params.extend(h_params)
+                
+                if self.query.inner_join:
+                    query, first_table_rows, second_table_rows = self.query.inner_join
+                    if len(first_table_rows) != len(second_table_rows):
+                        raise Error('Number of columns in both tuples must be equals')
+                    subquery_table_name = 'inner_join_table'
+                    join_columns = []
+                    for i in range(0, len(first_table_rows)):
+                        join_columns.append(
+                            '{}.{}={}.{}'.format(
+                                self.query.model._meta.db_table,
+                                first_table_rows[i],
+                                subquery_table_name,
+                                second_table_rows[i]
+                            )
+                        )
+                    join_columns = ' '.join(join_columns)
+                    query_part = 'INNER JOIN ({}) AS {} ON {}'.format(
+                        query,
+                        subquery_table_name,
+                        join_columns
+                    )
+                    result.append(query_part)
+                    import pdb
+                    pdb.set_trace()
+                    
 
             if self.query.explain_query:
                 result.insert(0, self.connection.ops.explain_query_prefix(
@@ -158,8 +186,6 @@ class CustomSQLCompiler(SQLCompiler):
                     ', '.join(sub_selects),
                     ' '.join(result),
                 ), tuple(sub_params + params)
-            import pdb
-            pdb.set_trace()
             return ' '.join(result), tuple(params)
         finally:
             # Finally do cleanup - get rid of the joins we created above.

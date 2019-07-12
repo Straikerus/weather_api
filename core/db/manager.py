@@ -1,8 +1,8 @@
 from django.db.models.manager import BaseManager
-from django.db.models.query import QuerySet
+from .queryset import CustomQuerySet
 from .query import CustomQuery
 
-class CustomManager(BaseManager.from_queryset(QuerySet)):
+class CustomManager(BaseManager.from_queryset(CustomQuerySet)):
     def get_queryset(self):
         """
         Return a new QuerySet object. Subclasses can override this method to
